@@ -33,11 +33,6 @@ public class ShortArrTag extends ArrayTag {
 	
 	public short[] data;
 	
-	public ShortArrTag(short[] data) {
-		super(Tags.SHORT, null);
-		this.data = data;
-	}
-	
 	public ShortArrTag(String id, short[] data) {
 		super(Tags.SHORT, id);
 		this.data = data;
@@ -55,7 +50,8 @@ public class ShortArrTag extends ArrayTag {
 		assert index + Tags.TAG_SIZE >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
+		index = primiSerializer.write(data.length, index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

@@ -32,11 +32,6 @@ public class BooleanTag extends Tag {
 	public boolean data;
 	private static final int DATA_SIZE = 1;
 	
-	public BooleanTag(boolean data) {
-		super(Tags.BOOLEAN, null);
-		this.data = data;
-	}
-	
 	public BooleanTag(String id, boolean data) {
 		super(Tags.BOOLEAN, id);
 		this.data = data;
@@ -50,7 +45,7 @@ public class BooleanTag extends Tag {
 	@Override
 	public int serialize(int index, byte[] destination) {
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

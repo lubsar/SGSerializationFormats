@@ -31,11 +31,6 @@ import svk.sglubos.tagformat.Tags;
 public class ByteArrTag extends ArrayTag {
 	public byte[] data;
 	
-	public ByteArrTag(byte[] data) {
-		super(Tags.BYTE, null);
-		this.data = data;
-	}
-	
 	public ByteArrTag(String id, byte[] data) {
 		super(Tags.BYTE, id);
 		this.data = data;
@@ -53,7 +48,8 @@ public class ByteArrTag extends ArrayTag {
 		assert index + Tags.TAG_SIZE >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
+		index = primiSerializer.write(data.length, index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;
@@ -73,7 +69,7 @@ public class ByteArrTag extends ArrayTag {
 		
 		int length = primiSerializer.readInt(index, source);
 		index += 4;
-		
+		System.out.println(length);
 		assert index + length <= source.length : "Source does not contain enough data";
 		
 		if(data == null || data.length != length) {

@@ -23,6 +23,8 @@
 
 package svk.sglubos.tagformat.structured;
 
+import java.nio.charset.Charset;
+
 import svk.sglubos.sgserialization.PrimiSerializer;
 import svk.sglubos.sgserialization.StructedSerializer;
 import svk.sglubos.tagformat.Tag;
@@ -30,10 +32,7 @@ import svk.sglubos.tagformat.Tags;
 
 public class StringTag extends Tag {
 	public String data;
-		
-	public StringTag(String data) {
-		super(Tags.STRING, null);
-	}
+	public Charset charset = Charset.defaultCharset();
 	
 	public StringTag(String id, String data) {
 		super(Tags.STRING, id);
@@ -52,26 +51,56 @@ public class StringTag extends Tag {
 		assert index + Tags.TAG_SIZE >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
-		index = structedSerializer.write(data, index, destination);
+		index = serializeID(index, destination);
+		
+		byte[] bytes = data.getBytes(idCharset);
+		
+		assert index + bytes.length + 4 <= destination.length : "Destination does not have enough capacity";
+		
+		index = primiSerializer.write(bytes.length, index, destination);
+		index = primiSerializer.write(bytes, index, destination);
 		return index;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override	
 	public StringTag deserialize(int index, byte[] source) {
-		return null;
+		assert index >= 0 : "Index cannot be less than 0";
+		assert tag == source[index] : "Incorect datatype tag";
+		assert index + 4 <= source.length : "Source does not contain enough data";
+		
+		index = index + 1;
+		index = deserializeId(index, source);
+		
+		assert index <= source.length : "Source does not contain enough data";
+		
+		data = structedSerializer.readString(-1, charset, index, source);
+		
+		return this;
 	}
 
 	@Override
 	public int deserialize2(int index, byte[] source) {
-		return 0;
+		assert index >= 0 : "Index cannot be less than 0";
+		assert tag == source[index] : "Incorect datatype tag";
+		assert index + 4 <= source.length : "Source does not contain enough data";
+		
+		index = index + 1;
+		index = deserializeId(index, source);
+		
+		int stringLength = primiSerializer.readInt(index, source);
+		index += 4;
+		
+		assert index >= source.length : "Source does not contain enough data";
+		data = structedSerializer.readString(stringLength, index, source);
+		
+		index += stringLength;
+		
+		return index;
 	}
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1 + getIdLength() + 4 + data.getBytes(charset).length;
 	}
-	
 }

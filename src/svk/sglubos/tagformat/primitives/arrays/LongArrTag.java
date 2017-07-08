@@ -33,11 +33,6 @@ public class LongArrTag extends ArrayTag {
 	
 	public long[] data;
 	
-	public LongArrTag(long[] data) {
-		super(Tags.LONG, null);
-		this.data = data;
-	}
-	
 	public LongArrTag(String id, long[] data) {
 		super(Tags.LONG, id);
 		this.data = data;
@@ -55,7 +50,8 @@ public class LongArrTag extends ArrayTag {
 		assert index + Tags.TAG_SIZE >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
+		index = primiSerializer.write(data.length, index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

@@ -31,11 +31,6 @@ import svk.sglubos.tagformat.Tags;
 public class BooleanArrTag extends ArrayTag {
 	public boolean[] data;
 	
-	public BooleanArrTag(boolean[] data) {
-		super(Tags.BOOLEAN, null);
-		this.data = data;
-	}
-	
 	public BooleanArrTag(String id, boolean[] data) {
 		super(Tags.BOOLEAN, id);
 		this.data = data;
@@ -53,7 +48,8 @@ public class BooleanArrTag extends ArrayTag {
 		assert index + Tags.TAG_SIZE >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
+		index = primiSerializer.write(data.length, index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

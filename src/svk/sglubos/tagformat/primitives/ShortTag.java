@@ -32,11 +32,6 @@ public class ShortTag extends Tag {
 	public short data;
 	private static final int DATA_SIZE = 2;
 	
-	public ShortTag(short data) {
-		super(Tags.SHORT, null);
-		this.data = data;
-	}
-	
 	public ShortTag(String id, short data) {
 		super(Tags.SHORT, id);
 		this.data = data;
@@ -50,7 +45,7 @@ public class ShortTag extends Tag {
 	@Override
 	public int serialize(int index, byte[] destination) {
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

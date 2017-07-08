@@ -32,11 +32,6 @@ public class FloatTag extends Tag {
 	public float data;
 	private static final int DATA_SIZE = 4;
 	
-	public FloatTag(float data) {
-		super(Tags.FLOAT, null);
-		this.data = data;
-	}
-	
 	public FloatTag(String id, float data) {
 		super(Tags.FLOAT, id);
 		this.data = data;
@@ -50,7 +45,7 @@ public class FloatTag extends Tag {
 	@Override
 	public int serialize(int index, byte[] destination) {
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

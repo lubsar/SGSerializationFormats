@@ -32,11 +32,6 @@ public class DoubleTag extends Tag {
 	public double data;
 	private static final int DATA_SIZE = 8;
 	
-	public DoubleTag(double data) {
-		super(Tags.DOUBLE, null);
-		this.data = data;
-	}
-	
 	public DoubleTag(String id, double data) {
 		super(Tags.DOUBLE, id);
 		this.data = data;
@@ -50,7 +45,7 @@ public class DoubleTag extends Tag {
 	@Override
 	public int serialize(int index, byte[] destination) {
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

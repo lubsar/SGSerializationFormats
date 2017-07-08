@@ -33,11 +33,6 @@ public class FloatArrTag extends ArrayTag {
 	
 	public float[] data;
 	
-	public FloatArrTag(float[] data) {
-		super(Tags.FLOAT, null);
-		this.data = data;
-	}
-	
 	public FloatArrTag(String id, float[] data) {
 		super(Tags.FLOAT, id);
 		this.data = data;
@@ -55,7 +50,8 @@ public class FloatArrTag extends ArrayTag {
 		assert index + Tags.TAG_SIZE >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
+		index = primiSerializer.write(data.length, index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

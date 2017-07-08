@@ -32,11 +32,6 @@ public class LongTag extends Tag {
 	public long data;
 	private static final int DATA_SIZE = 8;
 	
-	public LongTag(long data) {
-		super(Tags.LONG, null);
-		this.data = data;
-	}
-	
 	public LongTag(String id, long data) {
 		super(Tags.LONG, id);
 		this.data = data;
@@ -50,7 +45,7 @@ public class LongTag extends Tag {
 	@Override
 	public int serialize(int index, byte[] destination) {
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

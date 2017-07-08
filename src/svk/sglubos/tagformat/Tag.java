@@ -74,9 +74,18 @@ public abstract class Tag implements Serializable {
 	
 	protected int getIdLength() {
 		if(idLength == -1) {
-			return idLength = id.getBytes(idCharset).length;
+			return idLength = 4 + id.getBytes(idCharset).length;
 		}
 		return idLength;
+	}
+	
+	protected int serializeID(int index, byte[] destination) {
+		byte[] data = id.getBytes(idCharset);
+		
+		assert index + data.length + 4 <= destination.length : "Destination does not have enough capacity";
+		
+		index = primiSerializer.write(data.length, index, destination);
+		return primiSerializer.write(data, index, destination);
 	}
 	
 	protected int deserializeId(int index, byte[] source) {

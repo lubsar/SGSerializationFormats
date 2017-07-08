@@ -32,11 +32,6 @@ public class ByteTag extends Tag {
 	public byte data;
 	private static final int DATA_SIZE = 1;
 	
-	public ByteTag(byte data) {
-		super(Tags.BYTE, null);
-		this.data = data;
-	}
-	
 	public ByteTag(String id, byte data) {
 		super(Tags.BYTE, id);
 		this.data = data;
@@ -50,7 +45,7 @@ public class ByteTag extends Tag {
 	@Override
 	public int serialize(int index, byte[] destination) {
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

@@ -33,11 +33,6 @@ public class DoubleArrTag extends ArrayTag {
 	
 	public double[] data;
 	
-	public DoubleArrTag(double[] data) {
-		super(Tags.DOUBLE, null);
-		this.data = data;
-	}
-	
 	public DoubleArrTag(String id, double[] data) {
 		super(Tags.DOUBLE, id);
 		this.data = data;
@@ -55,7 +50,8 @@ public class DoubleArrTag extends ArrayTag {
 		assert index + Tags.TAG_SIZE >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
+		index = primiSerializer.write(data.length, index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

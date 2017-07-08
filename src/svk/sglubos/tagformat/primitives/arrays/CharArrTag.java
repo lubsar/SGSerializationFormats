@@ -33,11 +33,6 @@ public class CharArrTag extends ArrayTag {
 	
 	public char[] data;
 	
-	public CharArrTag(char[] data) {
-		super(Tags.CHAR, null);
-		this.data = data;
-	}
-	
 	public CharArrTag(String id, char[] data) {
 		super(Tags.CHAR, id);
 		this.data = data;
@@ -55,7 +50,8 @@ public class CharArrTag extends ArrayTag {
 		assert index + Tags.TAG_SIZE >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
+		index = primiSerializer.write(data.length, index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;

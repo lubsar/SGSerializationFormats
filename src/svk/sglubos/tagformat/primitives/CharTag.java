@@ -32,11 +32,6 @@ public class CharTag extends Tag {
 	public char data;
 	private static final int DATA_SIZE = 2;
 	
-	public CharTag(char data) {
-		super(Tags.CHAR, null);
-		this.data = data;
-	}
-	
 	public CharTag(String id, char data) {
 		super(Tags.CHAR, id);
 		this.data = data;
@@ -50,7 +45,7 @@ public class CharTag extends Tag {
 	@Override
 	public int serialize(int index, byte[] destination) {
 		destination[index++] = tag;
-		index = structedSerializer.write(getID(), idCharset, index, destination);
+		index = serializeID(index, destination);
 		index = primiSerializer.write(data, index, destination);
 		
 		return index;
