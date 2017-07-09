@@ -45,7 +45,7 @@ public class ByteArrTag extends ArrayTag {
 	public int serialize(int index, byte[] destination) {
 		assert index >= 0 : "Index cannot be less than 0";
 		assert destination != null: "Desitantion cannot be null";
-		assert index + Tags.TAG_SIZE >= destination.length: "Destination does not have enough capacity";
+		assert index + 1 >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
 		index = serializeID(index, destination);
@@ -62,23 +62,10 @@ public class ByteArrTag extends ArrayTag {
 		assert tag == source[index] : "Incorect datatype tag";
 		assert index + 4 <= source.length : "Source does not contain enough data";
 		
-		index = index + 1;
-		index = deserializeId(index, source);
+		ByteArrTag data = new ByteArrTag(null, null, primiSerializer, structedSerializer);
+		data.deserialize2(index, source);
 		
-		assert index + 4 <= source.length : "Source does not contain enough data";
-		
-		int length = primiSerializer.readInt(index, source);
-		index += 4;
-		System.out.println(length);
-		assert index + length <= source.length : "Source does not contain enough data";
-		
-		if(data == null || data.length != length) {
-			data = new byte[length];
-		}
-		
-		primiSerializer.read(data, index, source);
-		
-		return this;
+		return data;
 	}
 
 	@Override
@@ -108,6 +95,6 @@ public class ByteArrTag extends ArrayTag {
 
 	@Override
 	public int getSize() {
-		return 1 + 4 + getIdLength() + data.length;
+		return 1 + 4 + getIdSize() + data.length;
 	}
 }

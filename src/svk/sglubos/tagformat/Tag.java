@@ -33,7 +33,7 @@ public abstract class Tag implements Serializable {
 	protected final byte tag;
 	
 	private String id;
-	private int idLength = -1;
+	private int idSize = -1;
 	protected Charset idCharset = Charset.defaultCharset();
 	
 	protected PrimiSerializer primiSerializer;
@@ -56,12 +56,12 @@ public abstract class Tag implements Serializable {
 	
 	public void setID(String id) {
 		this.id = id;
-		this.idLength = -1;
+		this.idSize = -1;
 	}
 	
 	public void setIDCharset(Charset charset) {
 		this.idCharset = charset;
-		this.idLength = -1;
+		this.idSize = -1;
 	}
 	
 	public Charset getIDCharset() {
@@ -72,11 +72,11 @@ public abstract class Tag implements Serializable {
 		return id;
 	}
 	
-	protected int getIdLength() {
-		if(idLength == -1) {
-			return idLength = 4 + id.getBytes(idCharset).length;
+	protected int getIdSize() {
+		if(idSize == -1) {
+			return idSize = 4 + id.getBytes(idCharset).length;
 		}
-		return idLength;
+		return idSize;
 	}
 	
 	protected int serializeID(int index, byte[] destination) {

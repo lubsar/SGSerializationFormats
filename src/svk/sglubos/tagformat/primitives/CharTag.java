@@ -58,12 +58,10 @@ public class CharTag extends Tag {
 		assert tag == source[index] : "Incorect datatype tag";
 		assert index + 4 + DATA_SIZE <= source.length : "Source does not contain enough data";
 		
-		index = index + 1;
-		index = deserializeId(index, source);
+		CharTag data = new CharTag(null, ' ', primiSerializer, structedSerializer);
+		data.deserialize2(index, source);
 		
-		data = primiSerializer.readChar(index, source);
-		
-		return this;
+		return data;
 	}
 
 	@Override
@@ -82,6 +80,6 @@ public class CharTag extends Tag {
 
 	@Override
 	public int getSize() {
-		return 1 + getIdLength() + DATA_SIZE;
+		return 1 + getIdSize() + DATA_SIZE;
 	}
 }
