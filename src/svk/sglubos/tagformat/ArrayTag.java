@@ -27,6 +27,9 @@ import svk.sglubos.sgserialization.PrimiSerializer;
 import svk.sglubos.sgserialization.StructedSerializer;
 
 public abstract class ArrayTag extends Tag {
+	//tag + data tag + length
+	protected static final int META_DATA_SIZE = 1 + 1 + 4;
+	
 	protected final byte dataTag;
 	
 	public ArrayTag(byte dataTag, String id, PrimiSerializer primiSerializer, StructedSerializer structedSerializer) {

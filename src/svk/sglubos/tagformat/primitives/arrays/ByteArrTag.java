@@ -45,9 +45,10 @@ public class ByteArrTag extends ArrayTag {
 	public int serialize(int index, byte[] destination) {
 		assert index >= 0 : "Index cannot be less than 0";
 		assert destination != null: "Desitantion cannot be null";
-		assert index + 1 >= destination.length: "Destination does not have enough capacity";
+		assert index + META_DATA_SIZE >= destination.length: "Destination does not have enough capacity";
 		
 		destination[index++] = tag;
+		destination[index++] = dataTag;
 		index = serializeID(index, destination);
 		index = primiSerializer.write(data.length, index, destination);
 		index = primiSerializer.write(data, index, destination);
@@ -59,8 +60,9 @@ public class ByteArrTag extends ArrayTag {
 	@Override
 	public ByteArrTag deserialize(int index, byte[] source) {
 		assert index >= 0 : "Index cannot be less than 0";
+		assert index + META_DATA_SIZE <= source.length : "Source does not contain enough data";
 		assert tag == source[index] : "Incorect datatype tag";
-		assert index + 4 <= source.length : "Source does not contain enough data";
+		assert dataTag == source[index + 1] : "Incorect array datatype tag";
 		
 		ByteArrTag data = new ByteArrTag(null, null, primiSerializer, structedSerializer);
 		data.deserialize2(index, source);
@@ -71,10 +73,11 @@ public class ByteArrTag extends ArrayTag {
 	@Override
 	public int deserialize2(int index, byte[] source) {
 		assert index >= 0 : "Index cannot be less than 0";
+		assert index + META_DATA_SIZE <= source.length : "Source does not contain enough data";
 		assert tag == source[index] : "Incorect datatype tag";
-		assert index + 4 <= source.length : "Source does not contain enough data";
+		assert dataTag == source[index + 1] : "Incorect array datatype tag";
 		
-		index = index + 1;
+		index = index + 2;
 		index = deserializeId(index, source);
 		
 		assert index + 4 <= source.length : "Source does not contain enough data";
@@ -95,6 +98,6 @@ public class ByteArrTag extends ArrayTag {
 
 	@Override
 	public int getSize() {
-		return 1 + 4 + getIdSize() + data.length;
+		return META_DATA_SIZE + getIdSize() + data.length;
 	}
 }
