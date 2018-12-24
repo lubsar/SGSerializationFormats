@@ -6,4 +6,4 @@ Serialization library based on SGSerialization library. Contains various seriali
 - Custom tagged format
 - NBT format [comming soon]
 
-**Licensed under [MIT License](/LICENSE.md)**
+**Licensed under [MIT License](LICENSE.md)**
